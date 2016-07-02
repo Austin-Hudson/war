@@ -64,7 +64,7 @@ function makeMove(){
       var card = hands[1].shift();
       moves[1] = card;
       renderMove(card);
-      winner = checkMoves();
+      checkMoves();
       turn = !turn;
     }
    }
@@ -92,24 +92,50 @@ function checkMoves(card) {
     hands[0].splice(hands[0].length, 0, moves[0]);
     hands[0].splice(hands[0].length, 0, moves[1]);
     removeWar();
-    return 'player1'
   }//if the computer drew a higher value
   else if(value < valueTwo){
     hands[1].splice(hands[1].length, 0, moves[0]);
     hands[1].splice(hands[1].length, 0, moves[1]);
     removeWar();
-    return 'player2'
   } //if there is war
   else if(value === valueTwo){
     isWar = true;
     declareWar();
     console.log("Winner's Pile RIGHT after declare war", winnerPile);
     console.log("Moves after declare war", moves);
-     renderWar();
-    // giveToWinner();
+    renderWar();
+    winner = checkWinner();
+    console.log("WINNER for this war is ", winner);
+    giveToWinner();
     // console.log("Total hand size after war: ", hands.length);
     // console.log(hands);
     isWar = false;
+  }
+}
+
+/*
+ This function checks to see who the winner is for the war
+*/
+function checkWinner(){
+  // console.log("Winners ARRRAYY", winnerPile);
+  // console.log("Moves to check after declare winner", moves);
+  // console.log(winnerPile[winnerPile.length-2].value);
+  // console.log(winnerPile[winnerPile.length-1].value);
+  var value = winnerPile[winnerPile.length-2].value;
+  var value2 = winnerPile[winnerPile.length-1].value;
+
+  //change the value of the ace value
+  if(value === 1) {value = 14;}
+  else if(valueTwo === 1) {valueTwo = 14;}
+
+  if( value > value2){
+    return "player1";
+  }
+  else if(value < value2){
+    return "player2";
+  }
+  else {
+    return "tie";
   }
 }
 
@@ -127,33 +153,32 @@ function declareWar() {
 
     console.log("Winner Pile AFTER WAR Cards:", winnerPile);
 
-    // //Put down one more card from each player (the cards flipped over)
-    // winnerPile.push(hands[0].pop());
-    // winnerPile.push(hands[1].pop());
-    // console.log("Winner Pile AFTER FACED Down:", winnerPile);
-    //
-    // //put those in the winner pile (the face up cards)
-    // winnerPile.push(hands[0].pop());
-    // winnerPile.push(hands[1].pop());
-    //
-    // console.log("Winner Pile AFTER facing up:", winnerPile);
+    //Put down one more card from each player (the cards flipped over)
+    winnerPile.push(hands[0].pop());
+    winnerPile.push(hands[1].pop());
+    console.log("Winner Pile AFTER FACED Down:", winnerPile);
 
-    // //render it
-    // var cardOne = winnerPile.pop();
-    // var cardTwo = winnerPile.pop();
-    // console.log("C1:",cardOne);
-    // console.log("C2:", cardTwo);
-    //
-    // //render each of the flipped cards
-    // renderMove(cardOne);
-    // renderMove(cardTwo);
-    //
-    // //push it back so you can give it to the winner
-    // winnerPile.push(cardOne);
-    // winnerPile.push(cardTwo);
-    //
-    // console.log("After War", winnerPile);
+    //put those in the winner pile (the face up cards)
+    winnerPile.push(hands[0].pop());
+    winnerPile.push(hands[1].pop());
 
+    console.log("Winner Pile AFTER facing up:", winnerPile);
+
+    //render it
+    var cardOne = winnerPile.pop();
+    var cardTwo = winnerPile.pop();
+    console.log("C1:",cardOne);
+    console.log("C2:", cardTwo);
+
+    //render each of the flipped cards
+    renderMove(cardOne);
+    renderMove(cardTwo);
+
+    //push it back so you can give it to the winner
+    winnerPile.push(cardOne);
+    winnerPile.push(cardTwo);
+
+    console.log("After War", winnerPile);
    }
   //
   //   // if one of them has one card left just use that card
@@ -183,18 +208,27 @@ function declareWar() {
 */
 function giveToWinner() {
   console.log("winnerPile to give to winner", winnerPile);
+  console.log("winner is", winner);
   if(winner === 'player1' && winnerPile.length){
     //give the winner pile to player one from the war
     for(var i = 0; i < winnerPile.length; i++){
       hands[0].push(winnerPile.pop());
     }
+    // //gives them teh moves as well
+    // hands[0].push(moves.pop());
+    // hands[0].push(moves.pop());
+
   } else if (winner === 'player2' && winnerPile.length) {
     //give the winner pile to player two from war
     for(var i = 0; i < winnerPile.length; i++){
       hands[1].push(winnerPile.pop());
     }
+    // //gives them teh moves as well
+    // hands[1].push(moves.pop());
+    // hands[1].push(moves.pop());
   }
-  console.log("Total hands size after given the cards to the winner", hands.length);
+  console.log("MOVESSSS", moves);
+  console.log("Total hands size after given the cards to the winner", hands[0].length + hands[1].length);
 }
 
 /*
