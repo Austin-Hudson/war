@@ -356,7 +356,7 @@ function renderWar(){
     if(warCard.value == 12) {value = "Queen";}
     if(warCard.value == 13) {value = "King"}
   }
-  warContent = " There were two " + value +'\'s' 
+  warContent = " There were two " + value +'\'s'
 
   //if there is war, render some text onto the screen
   if(isW == null || isW.length == 0){
@@ -368,7 +368,7 @@ function renderWar(){
     $(w).insertAfter(nav);
   }
   else {
-    isW.innerText = "WAR!";
+    isW.innerText = "WAR!" + warContent;
   }
 }
 
