@@ -106,7 +106,7 @@ function checkMoves(card) {
     renderWar();
     winner = checkWinner();
     console.log("WINNER for this war is ", winner);
-    giveToWinner();
+    //giveToWinner();
     // console.log("Total hand size after war: ", hands.length);
     // console.log(hands);
     isWar = false;
@@ -126,7 +126,7 @@ function checkWinner(){
 
   //change the value of the ace value
   if(value === 1) {value = 14;}
-  else if(valueTwo === 1) {valueTwo = 14;}
+  else if(value2 === 1) {value2 = 14;}
 
   if( value > value2){
     return "player1";
@@ -214,18 +214,13 @@ function giveToWinner() {
     for(var i = 0; i < winnerPile.length; i++){
       hands[0].push(winnerPile.pop());
     }
-    // //gives them teh moves as well
-    // hands[0].push(moves.pop());
-    // hands[0].push(moves.pop());
 
   } else if (winner === 'player2' && winnerPile.length) {
     //give the winner pile to player two from war
     for(var i = 0; i < winnerPile.length; i++){
       hands[1].push(winnerPile.pop());
     }
-    // //gives them teh moves as well
-    // hands[1].push(moves.pop());
-    // hands[1].push(moves.pop());
+
   }
   console.log("MOVESSSS", moves);
   console.log("Total hands size after given the cards to the winner", hands[0].length + hands[1].length);
