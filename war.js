@@ -8,14 +8,16 @@ var war             = new Deck(), //deck to be used
     isWar           = false, //if there is war
     winnerPile      = [], //pile cards for the people that won the war
     inProgress      = false, //the state of the game
-    winner          = "";  //for who won the war
+    winner          = ""  //for who won the war
+    debugging       = true;
+
+
 
   //get the start button and make an event listener for it
   var startButton = document.querySelector('button');
   startButton.addEventListener('click', function() {
     start();
   });
-
   /*
 This function starts the game
 */
@@ -45,6 +47,7 @@ function start(){
   This funciton makes the move
 */
 function makeMove(){
+
   //only make the move if the game is in progress
   if(inProgress){
     if (hands[0].length !== 0 && hands[1].length !== 0)
@@ -65,8 +68,11 @@ function makeMove(){
       turn = !turn;
     }
    }
+      // else {debugging = false; }
+   //}
    else {
      inProgress = false;
+     endGame();
    }
  }
 }
@@ -97,9 +103,12 @@ function checkMoves(card) {
   else if(value === valueTwo){
     isWar = true;
     declareWar();
-    renderWar();
-    giveToWinner();
-    console.log("Total hand size after war: ", hands[0].length + hands[1].length);
+    console.log("Winner's Pile RIGHT after declare war", winnerPile);
+    console.log("Moves after declare war", moves);
+     renderWar();
+    // giveToWinner();
+    // console.log("Total hand size after war: ", hands.length);
+    // console.log(hands);
     isWar = false;
   }
 }
@@ -107,7 +116,7 @@ function checkMoves(card) {
 /*
  This function does war when there is war
 */
-var declareWar = function() {
+function declareWar() {
   console.log("WARRRR!");
   //check if they have enough cards to do war
   if (hands[0].length > 2 && hands[1].length > 2){
@@ -116,26 +125,57 @@ var declareWar = function() {
     winnerPile.push(moves[0]);
     winnerPile.push(moves[1]);
 
-    //Put down one more card from each player (the cards flipped over)
-    winnerPile.push(hands[0].shift());
-    winnerPile.push(hands[1].shift());
-    //make the moves to flip over
+    console.log("Winner Pile AFTER WAR Cards:", winnerPile);
 
-    //put those in the winner pile (the face up cards)
-    winnerPile.push(hands[0].shift());
-    winnerPile.push(hands[1].shift());
+    // //Put down one more card from each player (the cards flipped over)
+    // winnerPile.push(hands[0].pop());
+    // winnerPile.push(hands[1].pop());
+    // console.log("Winner Pile AFTER FACED Down:", winnerPile);
+    //
+    // //put those in the winner pile (the face up cards)
+    // winnerPile.push(hands[0].pop());
+    // winnerPile.push(hands[1].pop());
+    //
+    // console.log("Winner Pile AFTER facing up:", winnerPile);
 
-    console.log("Winner Pile:", winnerPile);
-    //render it
-    var cardOne = winnerPile.pop();
-    var cardTwo = winnerPile.pop();
-    console.log("C1:",cardOne);
-    console.log("C2:", cardTwo);
+    // //render it
+    // var cardOne = winnerPile.pop();
+    // var cardTwo = winnerPile.pop();
+    // console.log("C1:",cardOne);
+    // console.log("C2:", cardTwo);
+    //
+    // //render each of the flipped cards
+    // renderMove(cardOne);
+    // renderMove(cardTwo);
+    //
+    // //push it back so you can give it to the winner
+    // winnerPile.push(cardOne);
+    // winnerPile.push(cardTwo);
+    //
+    // console.log("After War", winnerPile);
 
-    renderMove(cardOne);
-    renderMove(cardTwo);
+   }
+  //
+  //   // if one of them has one card left just use that card
+  // else if (hands[0].length == 1){
+  //   var card = hands[0].pop();
+  //   renderMove(card);
+  // }
+  // else if (hands[1].length == 1){
+  //   var card2 = hands[1].pop();
+  //   renderMove(card);
+  // }
+  //   //there is war but the person has no more cards
+  // else if(hands[0].length == 0){
+  //   console.log("Player 2 Wins!");
+  //   inProgress = false;
+  // }
+  //
+  // else if(hands[1].length == 0){
+  //   console.log("Player 1 Wins!");
+  //   inProgress = false;
+  // }
 
-  }
 }
 
 /*
@@ -148,20 +188,13 @@ function giveToWinner() {
     for(var i = 0; i < winnerPile.length; i++){
       hands[0].push(winnerPile.pop());
     }
-    //give the flipped over cards from war as well to player 1
-    for(var i = 0; i < moves.length; i++){
-      hands[1].push(moves.pop());
-    }
   } else if (winner === 'player2' && winnerPile.length) {
     //give the winner pile to player two from war
     for(var i = 0; i < winnerPile.length; i++){
       hands[1].push(winnerPile.pop());
     }
-    //give the winner pile to player two from war
-    for(var i = 0; i < moves.length; i++){
-      hands[1].push(moves.pop());
-    }
   }
+  console.log("Total hands size after given the cards to the winner", hands.length);
 }
 
 /*
@@ -203,9 +236,9 @@ function renderDecks(){
  This function renders the move
 */
 function renderMove(card){
-  console.log(card);
-  // console.log("H1:",hands[0].length);
-  // console.log("H2:",hands[1].length);
+  // console.log(card);
+  // console.log("H1:(RenderMove)",hands[0].length);
+  // console.log("H2:(RenderMove)",hands[1].length);
   // console.log("H", hands[0].length+hands[1].length + moves.length);
 
   //render the image for the players hand
@@ -231,6 +264,7 @@ function renderMove(card){
         c.setAttribute("src", dir);
         c.classList.add("card");
         value.appendChild(c);
+        console.log("H", hands[0].length+hands[1].length + moves.length);
     }
   }
 }
@@ -241,7 +275,7 @@ function renderMove(card){
 function renderWar(){
 
   var isW = document.querySelector(".war");
-  var table = document.querySelector(".war-decks");
+  var nav = document.querySelector(".nav-bar");
 
   //if there is war, render some text onto the screen
   if(isW == null || isW.length == 0){
@@ -250,7 +284,7 @@ function renderWar(){
     var content = document.createTextNode("WAR!");
     w.appendChild(content);
     //JQuerty to insert after scores
-    $(w).insertAfter(table);
+    $(w).insertAfter(nav);
   }
   else {
     isW.innerText = "WAR!";
@@ -262,4 +296,15 @@ function renderWar(){
  THis function ends the game
 */
 function endGame(){
+  var r = document.querySelector(".winner")
+  //display the winner
+  if(r === null){
+    var b = document.querySelector("body");
+    var result = document.createElement("div");
+    result.classList.add("winner");
+    var w = document.createTextNode(winner);
+    result.appendChild(w);
+    b.appendChild(result);
+ }
+
 }
