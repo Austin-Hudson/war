@@ -68,11 +68,14 @@ function makeMove(){
       turn = !turn;
     }
    }
-      // else {debugging = false; }
-   //}
+
    else {
      inProgress = false;
      endGame();
+   }
+
+   if(debugging){
+     if(inProgress){makeMove(); }
    }
  }
 }
@@ -106,9 +109,9 @@ function checkMoves(card) {
     renderWar();
     winner = checkWinner();
     console.log("WINNER for this war is ", winner);
-    //giveToWinner();
-    // console.log("Total hand size after war: ", hands.length);
-    // console.log(hands);
+    giveToWinner();
+    console.log("Total hand size after war: ", hands.length);
+    console.log(hands);
     isWar = false;
   }
 }
@@ -127,8 +130,9 @@ function checkWinner(){
   //change the value of the ace value
   if(value === 1) {value = 14;}
   else if(value2 === 1) {value2 = 14;}
-
-  if( value > value2){
+  console.log("V1:", value);
+  console.log("V2:", value2);
+  if(value > value2){
     return "player1";
   }
   else if(value < value2){
@@ -143,6 +147,7 @@ function checkWinner(){
  This function does war when there is war
 */
 function declareWar() {
+
   console.log("WARRRR!");
   //check if they have enough cards to do war
   if (hands[0].length > 2 && hands[1].length > 2){
@@ -179,6 +184,7 @@ function declareWar() {
     winnerPile.push(cardTwo);
 
     console.log("After War", winnerPile);
+    console.log("Moves before ending declare War", moves);
    }
   //
   //   // if one of them has one card left just use that card
@@ -327,6 +333,10 @@ function renderWar(){
 function endGame(){
   var r = document.querySelector(".winner")
   //display the winner
+  var winner = "";
+  if(hands[0].length == 0) { winner = "Computer is the winner!";}
+  else if(hands[1].length == 0) { winner = "Player 1 is the winner!";}
+
   if(r === null){
     var b = document.querySelector("body");
     var result = document.createElement("div");

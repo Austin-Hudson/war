@@ -51,6 +51,11 @@ h2{
   color: red;
   font-size: 24px;
 }
+.winner {
+  color: red;
+  font-size 24;
+  margin-left: 45%; 
+}
 
 #startgame{
   margin-left: 47%;
