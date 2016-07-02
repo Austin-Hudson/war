@@ -73,10 +73,11 @@ function makeMove(){
      inProgress = false;
      endGame();
    }
-
-  //  if(debugging){
-  //    if(inProgress){makeMove(); }
-  //  }
+   //for debugging purposes
+   if(debugging){
+     if(inProgress){makeMove();}
+     else {endGame();}
+   }
  }
 }
 
@@ -105,11 +106,11 @@ function checkMoves(card) {
   else if(value === valueTwo){
     isWar = true;
     console.log("Moves", moves);
-    declareWar();
+    var cardsLeft = declareWar();
     console.log("Winner's Pile RIGHT after declare war", winnerPile);
     console.log("Moves after declare war", moves);
     renderWar();
-    winner = checkWinner();
+    winner = checkWinner(cardsLeft);
     // console.log("WINNER for this war is ", winner);
     giveToWinner();
     // console.log("Total hand size after war: ", hands.length);
@@ -121,13 +122,27 @@ function checkMoves(card) {
 /*
  This function checks to see who the winner is for the war
 */
-function checkWinner(){
+function checkWinner(cardsLeft){
   // console.log("Winners ARRRAYY", winnerPile);
   // console.log("Moves to check after declare winner", moves);
   // console.log(winnerPile[winnerPile.length-2].value);
   // console.log(winnerPile[winnerPile.length-1].value);
-  var value = winnerPile[winnerPile.length-2].value;
-  var value2 = winnerPile[winnerPile.length-1].value;
+  var value;
+  var value2;
+
+  if(cardsLeft >= 2){
+    value = winnerPile[winnerPile.length-2].value;
+    value2 = winnerPile[winnerPile.length-1].value;
+  }
+  //player 1 had 1 card left
+  else if (cardsLeft === 1){
+    value = winnerPile[2];
+    value2 = winnerPile[winnerPile.length-1];
+  }
+  else if(cardsLeft === 2){
+    value2 = winnerPile[2];
+    value = winnerPile[winnerPile.length-1];
+  }
 
   //change the value of the ace value
   if(value === 1) {value = 14;}
@@ -152,7 +167,7 @@ function declareWar() {
 
   console.log("WARRRR!");
   //check if they have enough cards to do war
-  if (hands[0].length > 2 && hands[1].length > 2){
+  if (hands[0].length >= 2 && hands[1].length >= 2){
       console.log(moves);
       //push the "war" cars onto the pile
       winnerPile.push(moves.pop());
@@ -167,7 +182,57 @@ function declareWar() {
 
       //render the outcome of the war action
       renderMove(winnerPile[winnerPile.length-2]);
-      renderMove(winnerPile[winnerPile.length-1])
+      renderMove(winnerPile[winnerPile.length-1]);
+
+      return 3; //greater then 2 cards each
+  }
+  //if the player 1 only has one card left, just use that for war
+  else if(hands[0].length === 1){
+    oneCardLeft(1);
+    return 1; //only one card
+  }
+  //if the player 2 only has one card left
+  else if(hands[1].length === 1){
+    oneCardLeft(2);
+    return 2; //only one card
+  }
+
+  //if they have no many cards left to do war, they just loose
+  else if(hands[0].length === 0) {
+    console.log("Player 1 loses!");
+    inProgress = false;
+  }
+  else if(hand[1].length == 0){
+    console.log("Player 2 loses");
+    inProgres = false;
+  }
+}
+
+
+/*
+ This is a helper function for a certain case in war
+*/
+function oneCardLeft(player){
+
+  //push the "war" cars onto the pile
+  winnerPile.push(moves.pop());
+  winnerPile.push(moves.pop());
+  //if player one only has on card left after the war
+  if(player === 1){
+    //use their last card as ward
+    winnerPile.push(hands[0].pop());
+    //player 2 still does teh war action
+    winnerPile.push(hands[1].shift());
+    winnerPile.push(hands[1].shift());
+
+  }
+
+  if(player === 2){
+    //use theirlast card as ward
+    winnerPile.push(hands[1].pop());
+    //player 1 still does teh war action
+    winnerPile.push(hands[0].shift());
+    winnerPile.push(hands[0].shift());
 
   }
 }
@@ -283,7 +348,7 @@ function renderWar(){
   var warCard = winnerPile[0];
   var warCard2 = winnerPile[1];
   var warContent = "";
-  var value;
+  var value = warCard.value;
 
   if(warCard.value === warCard2.value) {
     if(warCard.value == 1) {value = "Ace";}
@@ -291,7 +356,7 @@ function renderWar(){
     if(warCard.value == 12) {value = "Queen";}
     if(warCard.value == 13) {value = "King"}
 
-    warContent = " There were two " + value +'\'s' }
+  warContent = " There were two " + value +'\'s' }
 
   //if there is war, render some text onto the screen
   if(isW == null || isW.length == 0){
@@ -315,7 +380,7 @@ function endGame(){
   var r = document.querySelector(".winner")
   //display the winner
   var winner = "";
-  if(hands[0].length == 0) { winner = "Computer is the winner!";}
+  if(hands[0].length == 0) { winner = "Player 2 is the winner!";}
   else if(hands[1].length == 0) { winner = "Player 1 is the winner!";}
 
   if(r === null){
