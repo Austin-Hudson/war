@@ -202,9 +202,9 @@ function declareWar() {
     console.log("Player 1 loses!");
     inProgress = false;
   }
-  else if(hand[1].length == 0){
+  else if(hand[1].length === 0){
     console.log("Player 2 loses");
-    inProgres = false;
+    inProgress = false;
   }
 }
 
