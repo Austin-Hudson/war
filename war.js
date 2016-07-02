@@ -73,11 +73,11 @@ function makeMove(){
      inProgress = false;
      endGame();
    }
-   //for debugging purposes
-   if(debugging){
-     if(inProgress){makeMove();}
-     else {endGame();}
-   }
+  //  //for debugging purposes
+  //  if(debugging){
+  //    if(inProgress){makeMove();}
+  //    else {endGame();}
+  //  }
  }
 }
 
@@ -355,8 +355,8 @@ function renderWar(){
     if(warCard.value == 11) {value = "Jack";}
     if(warCard.value == 12) {value = "Queen";}
     if(warCard.value == 13) {value = "King"}
-
-  warContent = " There were two " + value +'\'s' }
+  }
+  warContent = " There were two " + value +'\'s' 
 
   //if there is war, render some text onto the screen
   if(isW == null || isW.length == 0){
